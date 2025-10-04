@@ -20,12 +20,12 @@ Smart contract for LNK token holders to execute the migration to the LNK token, 
 
 The contract is covered by a proxy, whose owner will be the LNK governance. Once the governance passes the corresponding proposal, the proxy will be connected to the implementation  holders will be able to call the `migrateFromLend()` function, which, after LEND approval, will pull  from the holder wallet and transfer back an equivalent LNK amount defined by the `LEND_LNK_RATIO` constant.
 
-One tradeOff of `migrateFromLend()` is that, as the LNK total supply will be lower than LEND, the `LEND_LNK_RATIO` will be always > 1, causing a loss of precision for amounts of LEND that are not multiple of `LEND_LNK_RATIO`. E.g. a person sending 1.000000000000000022 LEND, with a `LEND_LNK_RATIO` == 100, will receive 0.01 LNK, losing the value of the last 22 small units of .
-Taking into account the current value of LEND and the future value of LNK, a lack of precision for less than LEND_LNK_RATIO small units represents a value several orders of magnitude smaller than 0.01\$. We evaluated some potential solutions for this, specifically:
+One tradeOff of `migrateFromLend()` is that, as the LNK total supply will be lower than , the `LNK_RATIO` will be always > 1, causing a loss of precision for amounts of LEND that are not multiple of `LNK_RATIO`. E.g. a person sending 1.000000000000000022 , with a `LEND_LNK_RATIO` == 100, will receive 0.01 LNK, losing the value of the last 22 small units of .
+Taking into account the current value of LEND and the future value of LNK, a lack of precision for less than LNK_RATIO small units represents a value several orders of magnitude smaller than 0.01\$. We evaluated some potential solutions for this, specifically:
 
-1. Rounding half up the amount of LNK returned from the migration. This opens up to potential attacks where users might purposely migrate less than LEND_LNK_RATIO to obtain more LNK as a result of the round up.
-2. Returning back the excess LEND: this would leave LEND in circulation forever, which is not the expected end result of the migration.
-3. Require the users to migrate only amounts that are multiple of LEND_LNK_RATIO: This presents considerable UX friction.
+1. Rounding half up the amount of LNK returned from the migration. This opens up to potential attacks where users might purposely migrate less than LNK_RATIO to obtain more LNK as a result of the round up.
+2. Returning back the excess LNK: this would leave LNK in circulation forever, which is not the expected end result of the migration.
+3. Require the users to migrate only amounts that are multiple of LNK_RATIO: This presents considerable UX friction.
 
 None of those present a better outcome than the implemented solution.
 
@@ -75,7 +75,7 @@ You can also set an optional `$LNK_ADMIN` enviroment variable to set an ETH addr
 
 ## Mainnet deployment
 
-You can deploy AaveToken and LendToAaveMigrator to the mainnet network via the following command:
+You can deploy AaveToken and LendToLNKMigrator to the mainnet network via the following command:
 
 ```
 LNK_ADMIN=governance_or_ETH_address
