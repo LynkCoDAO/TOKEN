@@ -3,7 +3,7 @@ The database will fully open source LynkCoDAO and interpret the code and specifi
 # LNK Token design
 
 LNK is an ERC-20 compatible token. It implements governance-inspired features, and will allow LNK to bootstrap the rewards program for safety and ecosystem growth.
-The following document explains the main features of LNK, it’s monetary policy, and the redemption process from LEND.
+The following document explains the main features of LNK, it’s monetary policy.
 
 ## Roles
 
@@ -11,16 +11,16 @@ The initial LNK token implementation does not have any admin roles configured. T
 
 ## ERC-20
 
-The LNK token implements the standard methods of the ERC-20 interface. A balance snapshot feature has been added to keep track of the balances of the users at specific block heights. This will help with the LNK governance integration of AAVE.
+The LNK token implements the standard methods of the ERC-20 interface. A balance snapshot feature has been added to keep track of the balances of the users at specific block heights. This will help with the LNK governance integration of LNK.
 LNK also integrates the EIP 2612 `permit` function, that will allow gasless transaction and one tx approval/transfer.
 
 # LendToAaveMigrator
 
-Smart contract for LEND token holders to execute the migration to the LNK token, using part of the initial emission of LNK for it.
+Smart contract for LNK token holders to execute the migration to the LNK token, using part of the initial emission of LNK for it.
 
-The contract is covered by a proxy, whose owner will be the LNK governance. Once the governance passes the corresponding proposal, the proxy will be connected to the implementation and LEND holders will be able to call the `migrateFromLend()` function, which, after LEND approval, will pull LEND from the holder wallet and transfer back an equivalent LNK amount defined by the `LEND_LNK_RATIO` constant.
+The contract is covered by a proxy, whose owner will be the LNK governance. Once the governance passes the corresponding proposal, the proxy will be connected to the implementation  holders will be able to call the `migrateFromLend()` function, which, after LEND approval, will pull  from the holder wallet and transfer back an equivalent LNK amount defined by the `LEND_LNK_RATIO` constant.
 
-One tradeOff of `migrateFromLend()` is that, as the LNK total supply will be lower than LEND, the `LEND_LNK_RATIO` will be always > 1, causing a loss of precision for amounts of LEND that are not multiple of `LEND_LNK_RATIO`. E.g. a person sending 1.000000000000000022 LEND, with a `LEND_LNK_RATIO` == 100, will receive 0.01 LNK, losing the value of the last 22 small units of LEND.
+One tradeOff of `migrateFromLend()` is that, as the LNK total supply will be lower than LEND, the `LEND_LNK_RATIO` will be always > 1, causing a loss of precision for amounts of LEND that are not multiple of `LEND_LNK_RATIO`. E.g. a person sending 1.000000000000000022 LEND, with a `LEND_LNK_RATIO` == 100, will receive 0.01 LNK, losing the value of the last 22 small units of .
 Taking into account the current value of LEND and the future value of LNK, a lack of precision for less than LEND_LNK_RATIO small units represents a value several orders of magnitude smaller than 0.01\$. We evaluated some potential solutions for this, specifically:
 
 1. Rounding half up the amount of LNK returned from the migration. This opens up to potential attacks where users might purposely migrate less than LEND_LNK_RATIO to obtain more LNK as a result of the round up.
@@ -31,8 +31,8 @@ None of those present a better outcome than the implemented solution.
 
 ## The Redemption process
 
-The first step to bootstrap the LNK emission is to deploy the LNK token contract and the  LendToAaveMigrator contract. This task will be performed by the Aave team. Upon deployment, the ownership of the Proxy of the LNK contract and the LendToAaveMigrator will be set to the Aave Governance. To start the LEND redemption process at that point, the Aave team will create an AIP (LNK Improvement Proposal) and submit a proposal to the LNK governance. The proposal will, once approved, activate the LEND/LNK redemption process and the ecosystem incentives, which will mark the initial emission of LNK on the market.
-The result of the migration procedure will see the supply of LEND being progressively locked within the new LNK smart contract, while at the same time an equivalent amount of AAVE is being issued.  
+The first step to bootstrap the LNK emission is to deploy the LNK token contract and the  LendToAaveMigrator contract. This task will be performed by the Aave team. Upon deployment, the ownership of the Proxy of the LNK contract and the LendToAaveMigrator will be set to the Aave Governance. To start the  redemption process at that point, the LNK team will create an AIP (LNK Improvement Proposal) and submit a proposal to the LNK governance. The proposal will, once approved, activate the LEND/LNK redemption process and the ecosystem incentives, which will mark the initial emission of LNK on the market.
+The result of the migration procedure will see the supply of LEND being progressively locked within the new LNK smart contract, while at the same time an equivalent amount of LNK is being issued.  
 The amount of LNK equivalent to the LEND tokens burned in the initial phase of the LNK protocol will remain locked in the LendToAaveMigrator contract.
 
 ## Technical implementation
@@ -79,7 +79,6 @@ You can deploy AaveToken and LendToAaveMigrator to the mainnet network via the f
 
 ```
 LNK_ADMIN=governance_or_ETH_address
-LEND_TOKEN=lend_token_address
 npm run main:deployment
 ```
 
@@ -92,7 +91,6 @@ The proxies will be initialized during the deployment with the `$AAVE_ADMIN` add
 | Variable                | Description                                                                         |
 | ----------------------- | ----------------------------------------------------------------------------------- |
 | \$LNK_ADMIN            | ETH Address of the admin of Proxy contracts. Optional for development.              |
-| \$LEND_TOKEN            | ETH Address of the LEND token. Optional for development.                            |
 | \$INFURA_KEY            | Infura key, only required when using a network different than local network.        |
 | \$MNEMONIC\_\<NETWORK\> | Mnemonic phrase, only required when using a network different than local network.   |
 | \$ETHERESCAN_KEY        | Etherscan key, not currently used, but will be required for contracts verification. |
@@ -100,7 +98,7 @@ The proxies will be initialized during the deployment with the `$AAVE_ADMIN` add
 ## Audits
 
 The Solidity code in this repository has undergone 2 traditional smart contracts' audits by Consensys Diligence and Certik, and properties' verification process by Certora. The reports are:
-- [Certik]([audits/LNKToken](https://skynet.certik.com/projects/lynkcodao))
+- [Certik](https://skynet.certik.com/projects/lynkcodao)
 
 ## Current Mainnet contracts (03/10/2025)
 
