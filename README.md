@@ -75,7 +75,7 @@ You can also set an optional `$LNK_ADMIN` enviroment variable to set an ETH addr
 
 ## Mainnet deployment
 
-You can deploy AaveToken and LendToLNKMigrator to the mainnet network via the following command:
+You can deploy LNKToken and LendToLNKMigrator to the mainnet network via the following command:
 
 ```
 LNK_ADMIN=governance_or_ETH_address
